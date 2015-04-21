@@ -1,0 +1,140 @@
+<%
+local http = require("luci.http")
+http.prepare_content("text/html; charset=utf-8")
+-%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!--
+    Copyright (C) 2014 Dragino Technology Co., Limited
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+  <link rel="stylesheet" type="text/css" href="<%= resource %>/arduino/style.ugly.css" />
+  <title>Y&uacute;n &#20113;</title>
+</head>
+<body>
+<div id="container">
+  <div id="header">
+    <div class="wrapper">
+      <h1>Y&uacute;n &#20113;</h1>
+      <div id="logo"><a href="<%= pcdata(controller .. '/webpanel') %>"><img src="<%= resource %>/arduino/logo.png" alt="Y&uacute;n"/></a></div>
+      <div id="logophone"><a href="<%= pcdata(controller .. '/webpanel') %>"><img src="<%= resource %>/arduino/logo_phone.png" alt="Y&uacute;n"/></a></div>
+    </div>
+  </div>
+  <div id="content">
+    <div class="wrapper divide" id="yun_config">
+      <form id="form1" name="form1" method="post" onsubmit="send_post('<%=pcdata(controller .. "/webpanel/sensor")%>', this);" action="#">
+
+        <div id="error_response" class="hidden">
+          <p class="alert">An error has occurred.</p>
+        </div>
+        <ul>
+          <li>
+            <label class="title">IoT server configuration</label>
+          </li>
+          <li>
+            <label class="desc" for="server">
+              Server Type <span class="req">*</span>
+            </label>
+            <div class="input_container">
+                <select id="server" name="server">
+                <% for k, s in pairs(server_t) do %>
+                <option value="<%= k %>"
+                <%if k == server then %>
+                selected="selected"
+                <% end %>
+                ><%= k %></option>
+                <% end %>
+                </select>
+            </div>
+          </li>
+
+	   <% if server_t[server].has_tenant then %>	
+          <li>
+            <label class="desc" for="tenant">
+              Tenant <span class="req">*</span>
+            </label>
+            <div class="input_container">
+              <input id="tenant" name="tenant" type="text" value="<%= tenant %>" maxlength="255">
+            </div>
+          </li>
+	   <%end%>
+
+	   <% if server_t[server].has_user then %>
+         <li>
+            <label class="desc" for="user">
+              User Name <span class="req">*</span>
+            </label>
+            <div class="input_container">
+              <input id="user" name="user" type="text" value="<%= user %>" maxlength="255">
+            </div>
+          </li>
+	   <%end%>
+
+	   <% if server_t[server].has_pass then %>
+         <li>
+            <label class="desc" for="pass">
+              Password <span class="req">*</span>
+            </label>
+            <div class="input_container">
+              <input id="pass" name="pass" type="password" value="<%= pass %>" maxlength="63">
+            </div>
+          </li>
+	   <%end%>
+
+	   <% if server_t[server].has_api then %>
+         <li>
+            <label class="desc" for="apikey">
+              Api Key <span class="req">*</span>
+            </label>
+            <div class="input_container">
+              <input id="apikey" name="apikey" type="text" value="<%= apikey %>" maxlength="255">
+            </div>
+          </li>
+	   <%end%>
+
+         <li>
+            <label class="desc" for="devicename">
+              Device Name 
+            </label>
+            <div class="input_container">
+              <input id="devicename" name="devicename" type="text" value="<%= devicename %>" maxlength="255">
+            </div>
+          </li>
+
+	   <% if server_t[server].has_gid then %>
+         <li>
+            <label class="desc" for="globalID">
+              Global ID 
+            </label>
+            <span class="val"><%= globalid %></span>
+          </li>
+	   <%end%>
+
+        </ul>
+    </div>
+     <div class="wrapper divide">
+      <div class="input_container">
+        <input id="discard" class="btTxt submit saveForm btn" type="reset" value="Discard">
+        <input id="conf_rest_btn" class="btTxt submit saveForm" type="submit" value="Configure &amp; Restart MCU">
+      </div>
+
+      </form>
+    </div>
+
+     </div>
+  <!-- #content -->
+  <br class="clear"/>
+</div>
+<!-- #container -->
+<script type="text/javascript" charset="utf-8" src="<%= resource %>/arduino/zepto.min.js"></script>
+</body>
+</html>
