@@ -25,6 +25,18 @@ Now run:
 
  make
 
+### Image
+
+The Built Image will be found in:
+
+bin/ar71xx/openwrt-ar71xx-generic-linino-16M-rootfs-squashfs.bin
+bin/ar71xx/openwrt-ar71xx-generic-linino-16M-kernel.bin
+bin/ar71xx/openwrt-ar71xx-generic-linino-16M-rootfs-squashfs.bin
+
+And Upgrade Image will be found in:
+
+bin/ar71xx/openwrt-ar71xx-generic-linino-16M-squashfs-sysupgrade.bin
+
 ### Contact
 
 In case you get an error when building, run with:
