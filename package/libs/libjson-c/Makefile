@@ -8,12 +8,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=json-c
-PKG_VERSION:=0.9
-PKG_RELEASE:=2
+PKG_VERSION:=0.10
+PKG_RELEASE:=0
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=http://oss.metaparadigm.com/json-c/
-PKG_MD5SUM:=3a13d264528dcbaf3931b0cede24abae
+PKG_SOURCE_URL:=https://s3.amazonaws.com/json-c_releases/releases/
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=COPYING
@@ -30,13 +29,15 @@ TARGET_CFLAGS += $(FPIC)
 define Package/libjson
   SECTION:=libs
   CATEGORY:=Libraries
-  TITLE:=javascript object notation
+  TITLE:=javascript object notation (compat library)
   URL:=http://oss.metaparadigm.com/json-c/
 endef
 
 define Package/libjson/description
- This package contains a library for javascript object notation backends.
+ This package contains a compatibility library for packages that have not
+ been adapted to the json-c library rename yet
 endef
+
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/include

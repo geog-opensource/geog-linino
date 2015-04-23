@@ -20,7 +20,7 @@ It will tell you what build dependencies are required. Install them with apt-get
 
 ### Building
 
-First run:
+Install the Toolchain:
 
     make toolchain/clean
     make toolchain/install
