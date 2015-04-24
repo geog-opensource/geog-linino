@@ -25,6 +25,7 @@ endef
 
 define Package/yun-scripts/install
 	$(INSTALL_DIR) $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/usr/sbin/
 	$(INSTALL_DIR) $(1)/etc/init.d
 
 	$(INSTALL_BIN) ./files/usr/bin/blink-start $(1)/usr/bin/
@@ -35,6 +36,7 @@ define Package/yun-scripts/install
 	$(INSTALL_BIN) ./files/usr/bin/wifi-reset-and-reboot $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/usr/bin/reset-to-factory-anyway $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/usr/bin/run-avrdude $(1)/usr/bin/
+	$(INSTALL_BIN) ./files/usr/bin/set_uart_console $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/usr/bin/merge-sketch-with-bootloader.lua $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/usr/bin/wifi-reset-button-pressed $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/usr/bin/wifi-reset-button-released $(1)/usr/bin/
@@ -42,7 +44,9 @@ define Package/yun-scripts/install
 	$(INSTALL_BIN) ./files/usr/bin/run-bridge $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/usr/bin/reset-mcu $(1)/usr/bin/
 	$(INSTALL_BIN) ./files/usr/bin/special-storage-available $(1)/usr/bin/
-	$(INSTALL_BIN) ./files/usr/bin/pretty-wifi-info.lua $(1)/usr/bin
+	$(INSTALL_BIN) ./files/usr/bin/special-storage-available $(1)/usr/bin/
+
+	$(INSTALL_BIN) ./files/usr/sbin/link_arduino_www.sh $(1)/usr/sbin
 
 	$(INSTALL_BIN) ./files/etc/init.d/rename-wifi-if-access-point $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/etc/init.d/generate_new_gpg_key $(1)/etc/init.d

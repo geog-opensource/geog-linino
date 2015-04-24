@@ -35,6 +35,7 @@ define Package/yun-conf/install
 	$(INSTALL_DIR) $(1)/etc/arduino
 	$(INSTALL_DIR) $(1)/etc/arduino/ATmegaBoot
 	$(INSTALL_DIR) $(1)/etc/arduino/optiboot
+	$(INSTALL_DIR) $(1)/etc/arduino/stk500v2
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DIR) $(1)/etc/triggerhappy/triggers.d
 	$(INSTALL_DIR) $(1)/etc/linino
@@ -44,8 +45,12 @@ define Package/yun-conf/install
 	$(INSTALL_CONF) ./files/etc/shadow $(1)/etc/shadow.1
 	$(INSTALL_DATA) ./files/etc/banner $(1)/etc/
 
+	$(INSTALL_CONF) ./files/etc/failsafe_u-boot_for_dragino_HE_MS14.bin $(1)/etc/
+
 	$(INSTALL_CONF) ./files/etc/httpd.conf $(1)/etc/
 	$(INSTALL_CONF) ./files/etc/config/arduino $(1)/etc/config/
+	$(INSTALL_CONF) ./files/etc/config/network $(1)/etc/config/
+	$(INSTALL_CONF) ./files/etc/config/iot $(1)/etc/config/
 	$(INSTALL_CONF) ./files/etc/config/firewall $(1)/etc/config/firewall.1
 	#$(INSTALL_CONF) ./files/etc/config/dhcp $(1)/etc/config/dhcp.1
 
@@ -59,6 +64,7 @@ define Package/yun-conf/install
 
 	$(INSTALL_DATA) ./files/etc/arduino/ATmegaBoot/*.* $(1)/etc/arduino/ATmegaBoot/
 	$(INSTALL_DATA) ./files/etc/arduino/optiboot/*.* $(1)/etc/arduino/optiboot/
+	$(INSTALL_DATA) ./files/etc/arduino/stk500v2/*.* $(1)/etc/arduino/stk500v2/
 
 	$(INSTALL_DATA) ./files/etc/linino/LININO_CONTRIBUTORS.TXT $(1)/etc/linino/
 endef

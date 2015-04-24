@@ -724,7 +724,7 @@ config BUSYBOX_CONFIG_FEATURE_STAT_FORMAT
 
 config BUSYBOX_CONFIG_STTY
 	bool "stty"
-	default n
+	default y
 	help
 	  stty is used to change and print terminal line settings.
 
