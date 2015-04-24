@@ -23,6 +23,7 @@ local json = require 'luci.json'
 local http = require 'socket.http'
 local ltn12 = require 'ltn12'
 local tostring, assert, pairs, string, print, io, mime, require, os, arg= tostring, assert, pairs, string, print, io, mime, require, os, arg
+local tonumber = tonumber
 local table = table
 local uci = require("luci.model.uci")
 
@@ -35,7 +36,7 @@ local service = uci:get_all("iot","general")
 local API_KEY = service.ApiKey
 local TOP_URL = 'http://developer.cumulocity.com'
 local CREDENTIALS = mime.b64(service.tenant .. "/" .. service.user .. ":" .. service.pass)
-local debug=service.debug or false
+local debug=service.debug and tonumber(service.debug) or false
 local opt = arg[1]
 
 
@@ -61,13 +62,13 @@ function is_registered()
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: Cumulocity: is_registered(): chunks[1]='..chunks[1])
+
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: is_registered? external ID: ' .. mac .. ': chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: is_registered():  ret='..ret) end
-		print('DEBUG: Cumulocity: is_registered(): code='..code)
-		print('DEBUG: Cumulocity: is_registered(): head='..json.encode(head))
+		if ret then print('Cumulocity: is_registered? external ID: ' .. mac .. ':  ret='..ret) end
+		print('Cumulocity: is_registered? external ID: ' .. mac .. ': return code='..code)
 	end
 
 	if code == 200 then
@@ -106,13 +107,13 @@ function create_object()
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: create_object(): chunks[1]='..chunks[1])
+
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: create_object(): chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: create_object:  ret='..ret) end
-		print('DEBUG: Cumulocity: create_object: code='..code)
-		print('DEBUG: Cumulocity: create_object: head='..json.encode(head))
+		if ret then print('Cumulocity: create_object():  ret='..ret) end
+		print('Cumulocity: create_object(): return code='..code)
 	end
 
 	local result = (code == 201) and string.match(head.location,"managedObjects/(%d+)")
@@ -144,13 +145,13 @@ function get_object(gid)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: get_object(): chunks[1]='..chunks[1])
+
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: get_object(): chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: get_object:  ret='..ret) end
-		print('DEBUG: Cumulocity: get_object: code='..code)
-		print('DEBUG: Cumulocity: get_object: head='..json.encode(head))
+		if ret then print('Cumulocity: get_object():  ret='..ret) end
+		print('Cumulocity: get_object(): return code='..code)
 	end
 
 	if code == 200 then
@@ -187,13 +188,13 @@ function create_externalID(GlobalID)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: create_externalID(): chunks[1]='..chunks[1])
+
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: create_externalID(): chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: create_externalID:  ret='..ret) end
-		print('DEBUG: Cumulocity: create_externalID: code='..code)
-		print('DEBUG: Cumulocity: create_externalID: head='..json.encode(head))
+		if ret then print('Cumulocity: create_externalID():  ret='..ret) end
+		print('Cumulocity: create_externalID(): return code='..code)
 	end
 
 	if code == 401 then
@@ -226,13 +227,13 @@ function add_to_group(GlobalID,GroupID)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: add_to_group(): chunks[1]='..chunks[1])
+
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: add_to_group(): chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: add_to_group:  ret='..ret) end
-		print('DEBUG: Cumulocity: add_to_group: code='..code)
-		print('DEBUG: Cumulocity: add_to_group: head='..json.encode(head))
+		if ret then print('Cumulocity: add_to_group():  ret='..ret) end
+		print('Cumulocity: add_to_group(): return code='..code)
 	end
 
 	if code == 201 then
@@ -277,13 +278,14 @@ function update_measurement_types(GlobalID,TypesString)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: update_measurement_types(): chunks[1]='..chunks[1])
+
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: update_measurement_types(): chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: update_measurement_types:  ret='..ret) end
-		print('DEBUG: Cumulocity: update_measurement_types='..code)
-		print('DEBUG: Cumulocity: update_measurement_types: head='..json.encode(head))
+		if ret then print('Cumulocity: update_measurement_types():  ret='..ret) end
+		print('Cumulocity: update_measurement_types(): body='..body)
+		print('Cumulocity: update_measurement_types(): return code='..code)
 	end
 
 	if code == 201 then
@@ -326,13 +328,14 @@ function post_measurements(GlobalID,ValueString,ValueType)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: post_measurements(): chunks[1]='..chunks[1])
+
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: post_measurements(): chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: post_measurements:  ret='..ret) end
-		print('DEBUG: Cumulocity: post_measurements='..code)
-		print('DEBUG: Cumulocity: post_measurements: head='..json.encode(head))
+		if ret then print('Cumulocity: post_measurements():  ret='..ret) end
+		print('Cumulocity: post_measurements(): body='..body)
+		print('Cumulocity: post_measurements(): return code='..code)
 	end
 
 	if code == 201 then
@@ -374,6 +377,14 @@ function delete_device(GlobalID)
 		print('DEBUG: Cumulocity: delete_device: head='..json.encode(head))
 	end
 
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: delete_device(): chunks[1]='..chunks[1])
+		end
+		if ret then print('Cumulocity: delete_device():  ret='..ret) end
+		print('Cumulocity: delete_device(): return code='..code)
+	end
+
 	if code == 204 then
 		result = "Success delete device"..GlobalID
 	elseif code == 401 then
@@ -386,9 +397,10 @@ function delete_device(GlobalID)
 end
 
 
---Get active alarm for specify object 
---Code 200:	Get Alarm list
---Code 401:	Bad credentials code
+--Get active alarm for specify device  
+--@param GlobalID Global ID 
+--@return code return code
+--@return result alarm table
 function get_alarms(GlobalID)
 	local chunks = {}
 	local result
@@ -404,41 +416,59 @@ function get_alarms(GlobalID)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: Cumulocity: get_alarms(): chunks[1]='..chunks[1])
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: get_alarms  from ' .. GlobalID .. ': chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: get_alarms():  ret='..ret) end
-		print('DEBUG: Cumulocity: get_alarms(): code='..code)
-		print('DEBUG: Cumulocity: get_alarms(): head='..json.encode(head))
+		if ret then print('Cumulocity: get_alarms from ' .. GlobalID .. ':  ret='..ret) end
+		print('Cumulocity: get_alarms from ' .. GlobalID .. ': return code='..code)
 	end
 
 	if code == 200 then
-		utility.tabledump(json.decode(chunks[1]))
 		result = json.decode(chunks[1]).alarms
-	elseif code == 401 then
-		result = "Bad credentials code"
 	end
 	return code, result
 end
 
 
+--Get Alarm ID by alarm type
+--@param GlobalID Global ID
+--@param aType Alarm Type
+--@return AlarmID Alarm ID or 0
+function get_alarm_by_type(GlobalID, aType)
+	local c,t, AlarmID
+
+	if debug >= 1 then 
+		print('Cumulocity: get_alarms_by_type type:' ..aType..' GlobalID:' ..GlobalID)
+	end
+
+	c,t = get_alarms(GlobalID)
+	if c == 200 then
+		for _,v in pairs(t) do
+			if v.type == aType then
+				AlarmID = v.id
+			end 
+		end 
+	end
+	return AlarmID or 0
+end
+
+
+
 --Send an alarm
---Code 201:	Success send an alarm
---Code 401:	Bad credentials code
---Code 500:	Internal Error
-function send_alarm(GlobalID,Msg,AlarmType)
+--@param GlobalID Global ID
+--@param aType Alarm Type and Alarm Text
+--@return code return code
+--@return result Alarm ID if successful, else , return 0
+function send_alarm(GlobalID,aType)
 	local chunks = {}
 	local current_time = os.date("%Y-%m-%dT%H:%M:%SZ",os.time())
-	local aType
-	aType = AlarmType or "Dragino Alarm" 
 	local body = '{"time":"'..current_time..'",'
 	body = body .. '"type" : "'..aType..'",'
-	body = body .. '"text" : "'..Msg..'",'
+	body = body .. '"text" : "'..aType..'",'
 	body = body .. '"source" : { "id":"' .. GlobalID .. '"},'
 	body = body .. '"status": "ACTIVE",'
 	body = body .. '"severity": "MAJOR"}'
-	local result
 	ret, code, head = http.request(
 		{ ['url'] = TOP_URL .. '/alarm/alarms',
 			method = 'POST',
@@ -453,34 +483,26 @@ function send_alarm(GlobalID,Msg,AlarmType)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: send_alarm(): chunks[1]='..chunks[1])
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: send_alarm to ' .. GlobalID .. ': chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: send_alarm:  ret='..ret) end
-		print('DEBUG: Cumulocity: send_alarm='..code)
-		print('DEBUG: Cumulocity: send_alarm: head='..json.encode(head))
+		if ret then print('Cumulocity: send_alarm to ' .. GlobalID .. ':  ret='..ret) end
+		print('Cumulocity: send_alarm to ' .. GlobalID .. ': body='..body)
+		print('Cumulocity: send_alarm to ' .. GlobalID .. ': return code='..code)
 	end
 
-	if code == 201 then
-		result = string.match(head.location,"alarms/(%d+)")
-	elseif code == 401 then
-		result = "Bad credentials code"
-	end
-
-	return code,result
+	return string.match(head.location,"alarms/(%d+)") or 0
 end
 
 
 
---Send an alarm
---Code 200:	Success clear an alarm
---Code 401:	Bad credentials code
---Code 500:	Internal Error
+--Clear an alarm
+--@param AlarmID Clear Alarm
+--@return code return code
 function clear_alarm(AlarmID)
 	local chunks = {}
 	local body = '{"status": "CLEARED"}'
-	local result
 	ret, code, head = http.request(
 		{ ['url'] = TOP_URL .. '/alarm/alarms/'..AlarmID,
 			method = 'PUT',
@@ -495,22 +517,15 @@ function clear_alarm(AlarmID)
 			sink = ltn12.sink.table(chunks)
 		}
 	)
-	if debug then 
-		if chunks and chunks[1] then
-			print('DEBUG: send_alarm(): chunks[1]='..chunks[1])
+	if debug >= 1 then 
+		if debug >= 2 and chunks and chunks[1] then
+			print('Cumulocity: clear_alarm: chunks[1]='..chunks[1])
 		end
-		if ret then print('DEBUG: Cumulocity: send_alarm:  ret='..ret) end
-		print('DEBUG: Cumulocity: send_alarm='..code)
-		print('DEBUG: Cumulocity: send_alarm: head='..json.encode(head))
+		if ret then print('Cumulocity: clear_alarm:  ret='..ret) end
+		print('Cumulocity: clear_alarm: return code='..code)
 	end
 
-	if code == 201 then
-		result = "Success clear an alarm"
-	elseif code == 401 then
-		result = "Bad credentials code"
-	end
-
-	return code,result
+	return code
 end
 
 
@@ -542,13 +557,6 @@ end
 
 
 --Start from Here
---[[
-Commands:
--g : Get globalID of this device
--d : delete the device by external ID
--u : Update measurement types
--a : Append measurement types
---]]
 if opt == "-g" then
 	get_GlobalID()
 elseif opt == "-d" then
@@ -586,25 +594,69 @@ elseif opt == "-p" then
 	gid = get_GlobalID()
 	post_measurements(gid,value)
 
+elseif opt == "-ga" then 
+	local gid = arg[2]
+	--use local ID
+	if gid == '0' then
+		gid = get_GlobalID()
+	end	
+	local atype = arg[3]
+	print(get_alarm_by_type(gid,atype))
+
+elseif opt == "-sa" then 
+	local gid = arg[2]
+	--use local ID
+	if gid == '0' then 
+		gid = get_GlobalID()
+	end	
+	local atype = arg[3]
+	send_alarm(gid,atype)
+
+elseif opt == "-ca" then 
+	local aid = arg[2]
+	if aid == nil then
+		local gid = get_GlobalID()
+
+		local c,t,v
+		c,t = get_alarms(gid)
+		if c == 200 then
+			for _,v in pairs(t) do
+				clear_alarm(v.id)
+			end 
+		end
+		
+	else
+		clear_alarm(aid)
+	end
+
 elseif opt == "-h" then 
-	print('Cumulocity Lua Script; version 1.0')
-	print('-g	: Get globalID of this device,use mac for identify automatically')
+	print('Cumulocity Lua Script; version 1.1')
 	print('')
-	print('-d	: Delete this device,use mac for identify automatically')
-	print('')
-	print('-p	: Post Measurement(s) ')
-	print('    Single sensor example :  -p \'"Customize Measurement": { "Point": { "value": 200, "unit": "ml" }}\'')
-	print('    Multi sensor example : -p \'"Customize Measurement": { "Point": { "value": 200, "unit": "ml" }},"TemperatureSensor": { "T": { "value": 35, "unit": "C" }}\'')
-	print('')
-	print('-u typestring	: Update measurement types')
-	print('   Valid measurement name includes: all alphanumeric characters,space and _')
-	print('   Example: -u "Temperature Sensor,Motion Sensor"')
-	print('')
-	print('-a typestring	: Append measurement types')
+	print('-a typestring  :  Append measurement types')
 	print('   Valid measurement name includes: all alphanumeric characters,space and _')
 	print('   Example: -a "Temperature Sensor,Motion Sensor"')
 	print('')
-	print('-h	: help of this script')
+	print('-ca [AlarmID] :  clear alarm by alarmID, or clear all alarm from self device if alarmID is not set ')
+	print('')
+	print('-d  :  Delete this device,use mac for identify automatically')
+	print('')
+	print('-g  :  Get globalID of this device,use mac for identify automatically')
+	print('')
+	print('-ga GlobalID Type  :  Get Alarm ID by alarm type from a device which have the same Global ID.  If Global ID is set to 0, set the alarm to self device')
+	print('')
+	print('-h  :  help of this script')
+	print('')
+	print('-p  :  Post Measurement(s) ')
+	print('Single sensor example :  -p \'"Customize Measurement": { "Point": { "value": 200, "unit": "ml" }}\'')
+	print('Multi sensor example : -p \'"Customize Measurement": { "Point": { "value": 200, "unit": "ml" }},"TemperatureSensor": { "T": { "value": 35, "unit": "C" }}\'')
+	print('')
+	print('-sa GlobalID Type :  send an alarm to a device which have the same Global ID.  If Global ID is set to 0, set the alarm to self device')
+	print('')
+	print('-u typestring  :  Update measurement types')
+	print('Valid measurement name includes: all alphanumeric characters,space and _')
+	print('Example: -u "Temperature Sensor,Motion Sensor"')
+	print('')
+
 end	
 
 
